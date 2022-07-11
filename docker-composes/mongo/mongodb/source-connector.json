@@ -1,9 +1,13 @@
-{
-  "name": "mongo-source",
-  "config": {
-    "connector.class": "com.mongodb.kafka.connect.MongoSourceConnector",
-    "connection.uri": "mongodb://mongo1",
-    "database": "mydb",
-    "collection": "source"
-  }
-}
+{"name": "mongo-source",
+       "config": {
+                 "connector.class":"com.mongodb.kafka.connect.MongoSourceConnector",
+		 "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+		 "value.converter":"org.apache.kafka.connect.storage.StringConverter",
+		 "connection.uri":"mongodb://mongo1:27017/?replicaSet=rs0",
+         "database":"mydb",
+         "collection":"user1",
+         "pipeline":"[{\"$match\": {\"operationType\": \"insert\"}}, {$addFields : {\"fullDocument.travel\":\"MongoDB Kafka Connector\"}}]",
+		 "topic.prefix": "topic1"
+
+         }
+     }

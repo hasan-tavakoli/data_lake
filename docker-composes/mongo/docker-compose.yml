@@ -25,7 +25,7 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       CONFLUENT_SUPPORT_CUSTOMER_ID: "anonymous"
       KAFKA_DELETE_TOPIC_ENABLE: "true"
-
+    restart: "no"
   connect:
      image: cdc-tutorial-connect-1.6.1:1.0
      build:
@@ -92,7 +92,12 @@ services:
        - broker
        - connect
        - mongo1
-     command: bash -c "./initialize-container.sh ; tail -f /dev/null"
+     command: sh -c "/wait && ./initialize-container.sh; tail -f /dev/null"
+     environment:
+      - WAIT_HOSTS=connect:8083
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
 
 networks:
   default:
